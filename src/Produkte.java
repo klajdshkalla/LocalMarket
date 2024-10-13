@@ -33,6 +33,10 @@ public class Produkte {
         this.cmimi = cmimi;
     }
 
+    public double getTotalCmimi() {
+        return this.cmimi * this.sasia;
+    }
+
     @Override
     public String toString() {
         return "Produkte{" +

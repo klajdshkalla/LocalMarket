@@ -3,8 +3,7 @@ import java.time.LocalDate;
 public class Fatura {
     private double cmimi;
     private LocalDate data;
-    private Blersi blersi;
-
+    private Bleresi bleresi;
 
     public double getCmimi() {
         return cmimi;
@@ -22,13 +21,12 @@ public class Fatura {
         this.data = data;
     }
 
-    public Blersi getBlersi() {
-        return blersi;
+    public Bleresi getbleresi() {
+        return bleresi;
     }
 
-    public void setBlersi(Blersi blersi) {
-        this.blersi = blersi;
-
+    public void setbleresi(Bleresi bleresi) {
+        this.bleresi = bleresi;
     }
 
     @Override
@@ -36,14 +34,13 @@ public class Fatura {
         return "Fatura{" +
                 "cmimi=" + cmimi +
                 ", data=" + data +
-                ", blersi=" + blersi +
+                ", bleresi=" + bleresi +
                 '}';
     }
 
-    public Fatura(double cmimi, LocalDate data, Blersi blersi) {
+    public Fatura(double cmimi, LocalDate data, Bleresi bleresi) {
         this.cmimi = cmimi;
         this.data = data;
-        this.blersi = blersi;
-
+        this.bleresi = bleresi;
     }
 }

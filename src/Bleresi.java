@@ -1,5 +1,4 @@
-public class Blersi {
-
+public class Bleresi {
     private String emri;
     private String mbiemri;
 
@@ -15,13 +14,12 @@ public class Blersi {
         return mbiemri;
     }
 
-    public Blersi(String emri, String mbiemri) {
-        this.emri = emri;
+    public void setMbiemri(String mbiemri) {
         this.mbiemri = mbiemri;
     }
 
-    public void setMbiemri(String mbiemri) {
+    public Bleresi(String emri, String mbiemri) {
+        this.emri = emri;
         this.mbiemri = mbiemri;
-
     }
 }
