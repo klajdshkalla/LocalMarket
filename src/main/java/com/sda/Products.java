@@ -7,25 +7,27 @@ import jakarta.persistence.*;
 public class Products {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String tipi;
+
+    @Column(nullable = false)
     private int sasia;
+
+    @Column(nullable = false)
     private double cmimi;
 
-    // Default constructor
     public Products() {
     }
 
-    // Constructor with parameters
     public Products(String tipi, int sasia, double cmimi) {
         this.tipi = tipi;
         this.sasia = sasia;
         this.cmimi = cmimi;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -60,10 +62,6 @@ public class Products {
 
     @Override
     public String toString() {
-        return "Produkte{" +
-                "tipi='" + tipi + '\'' +
-                ", sasia=" + sasia +
-                ", cmimi=" + cmimi +
-                '}';
+        return tipi + " - Sasia: " + sasia + " - Cmimi: " + cmimi;
     }
 }
