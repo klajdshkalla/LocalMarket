@@ -8,24 +8,16 @@
         <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="connection.url">jdbc:mysql://localhost:3306/localmarket</property>
         <property name="connection.username">root</property>
-        <property name="connection.password">4skEpPjf3HBqoXV</property>
-
-        <!-- JDBC connection pool settings -->
-        <property name="connection.pool_size">1</property>
-
-        <!-- Select our SQL dialect -->
+        <property name="connection.password">root</property>
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-
-        <!-- Echo the SQL to stdout -->
-        <property name="show_sql">true</property>
-
-        <!-- Set the current session context -->
-        <property name="current_session_context_class">thread</property>
-
-        <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">update</property>
 
-        <!-- Mention annotated entity classes -->
+        <!-- Disable SQL logging -->
+        <property name="hibernate.show_sql">false</property>   <!-- Do not show SQL in logs -->
+        <property name="hibernate.format_sql">false</property> <!-- Do not format SQL in logs -->
+
         <mapping class="com.sda.Products"/>
+        <mapping class="com.sda.Bill"/>
+        <mapping class="com.sda.Buyer"/>
     </session-factory>
 </hibernate-configuration>
