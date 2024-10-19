@@ -12,7 +12,6 @@ import java.time.LocalDate;
 
 public class LocalMarketMain {
     public static void main(String[] args) {
-        // Initialize Hibernate
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("your-persistence-unit-name");
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -21,11 +20,10 @@ public class LocalMarketMain {
         double totalCmimi = 0;
 
         while (true) {
-            // Retrieve products from the database
+
             TypedQuery<Products> query = entityManager.createQuery("FROM Produkte", Products.class);
             List<Products> products = query.getResultList();
 
-            // Display products
             System.out.println("Produktet:");
             for (int i = 0; i < products.size(); i++) {
                 System.out.println((i + 1) + ": " + products.get(i));
@@ -60,7 +58,6 @@ public class LocalMarketMain {
             }
         }
 
-        // Collect buyer information
         System.out.println("Vendosni emrin e bleresit:");
         String emri = scanner.nextLine();
         System.out.println("Vendosni mbiemrin e bleresit:");
@@ -69,7 +66,6 @@ public class LocalMarketMain {
         Buyer buyer = new Buyer(emri, mbiemri);
         Bill bill = new Bill(totalCmimi, LocalDate.now(), buyer);
 
-        // Print the invoice
         System.out.println("\nFatura:");
         System.out.println("Bleresi: " + buyer.getEmri() + " " + buyer.getMbiemri());
         System.out.println("Data: " + bill.getData());
@@ -79,7 +75,6 @@ public class LocalMarketMain {
         }
         System.out.println("Totali: " + bill.getCmimi());
 
-        // Cleanup
         entityManager.close();
         entityManagerFactory.close();
         scanner.close();
