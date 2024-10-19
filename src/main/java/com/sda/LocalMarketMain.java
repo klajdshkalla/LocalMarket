@@ -64,6 +64,7 @@ public class LocalMarketMain {
         String mbiemri = scanner.nextLine();
 
         Buyer buyer = new Buyer(emri, mbiemri);
+
         Bill bill = new Bill(totalCmimi, LocalDate.now(), buyer);
 
         System.out.println("\nFatura:");
