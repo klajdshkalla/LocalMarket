@@ -1,11 +1,34 @@
 package com.sda;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "bills")
 public class Bill {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private double cmimi;
     private LocalDate data;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "buyer_id")
     private Buyer buyer;
+
+    // Add default constructor required by Hibernate
+    public Bill() {}
+
+    public Bill(double cmimi, LocalDate data, Buyer buyer) {
+        this.cmimi = cmimi;
+        this.data = data;
+        this.buyer = buyer;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public double getCmimi() {
         return cmimi;
@@ -23,11 +46,11 @@ public class Bill {
         this.data = data;
     }
 
-    public Buyer getbleresi() {
+    public Buyer getBuyer() {
         return buyer;
     }
 
-    public void setbleresi(Buyer buyer) {
+    public void setBuyer(Buyer buyer) {
         this.buyer = buyer;
     }
 
@@ -38,11 +61,5 @@ public class Bill {
                 ", data=" + data +
                 ", bleresi=" + buyer +
                 '}';
-    }
-
-    public Bill(double cmimi, LocalDate data, Buyer buyer) {
-        this.cmimi = cmimi;
-        this.data = data;
-        this.buyer = buyer;
     }
 }

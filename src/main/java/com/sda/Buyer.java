@@ -3,15 +3,29 @@ package com.sda;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "customers")
+@Table(name = "buyers")
 public class Buyer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String emri;
+
+    @Column(nullable = false)
     private String mbiemri;
+
+    public Buyer() {}
+
+    public Buyer(String emri, String mbiemri) {
+        this.emri = emri;
+        this.mbiemri = mbiemri;
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getEmri() {
         return emri;
@@ -29,8 +43,8 @@ public class Buyer {
         this.mbiemri = mbiemri;
     }
 
-    public Buyer(String emri, String mbiemri) {
-        this.emri = emri;
-        this.mbiemri = mbiemri;
+    @Override
+    public String toString() {
+        return emri + " " + mbiemri;
     }
 }

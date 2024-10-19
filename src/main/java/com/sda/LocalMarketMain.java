@@ -1,10 +1,8 @@
 package com.sda;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.TypedQuery;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,16 +10,15 @@ import java.time.LocalDate;
 
 public class LocalMarketMain {
     public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("your-persistence-unit-name");
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
 
         Scanner scanner = new Scanner(System.in);
         List<Products> selectedProducts = new ArrayList<>();
         double totalCmimi = 0;
 
         while (true) {
-
-            TypedQuery<Products> query = entityManager.createQuery("FROM Produkte", Products.class);
+            Query<Products> query = session.createQuery("FROM Products", Products.class);
             List<Products> products = query.getResultList();
 
             System.out.println("Produktet:");
@@ -36,7 +33,7 @@ public class LocalMarketMain {
             }
 
             try {
-                int choiceIndex = Integer.parseInt(choice) - 1; // Adjust for zero-based index
+                int choiceIndex = Integer.parseInt(choice) - 1;
                 if (choiceIndex >= 0 && choiceIndex < products.size()) {
                     Products selectedProduct = products.get(choiceIndex);
                     System.out.println("Vendosni sasine:");
@@ -46,7 +43,12 @@ public class LocalMarketMain {
                         Products boughtProduct = new Products(selectedProduct.getTipi(), sasia, selectedProduct.getCmimi());
                         selectedProducts.add(boughtProduct);
                         totalCmimi += boughtProduct.getTotalCmimi();
+
+                        // Update product quantity in database
+                        session.beginTransaction();
                         selectedProduct.setSasia(selectedProduct.getSasia() - sasia);
+                        session.update(selectedProduct);
+                        session.getTransaction().commit();
                     } else {
                         System.out.println("Sasia e pavlefshme ose e pamjaftueshme.");
                     }
@@ -64,8 +66,12 @@ public class LocalMarketMain {
         String mbiemri = scanner.nextLine();
 
         Buyer buyer = new Buyer(emri, mbiemri);
-
         Bill bill = new Bill(totalCmimi, LocalDate.now(), buyer);
+
+        session.beginTransaction();
+        session.save(buyer);
+        session.save(bill);
+        session.getTransaction().commit();
 
         System.out.println("\nFatura:");
         System.out.println("Bleresi: " + buyer.getEmri() + " " + buyer.getMbiemri());
@@ -76,8 +82,8 @@ public class LocalMarketMain {
         }
         System.out.println("Totali: " + bill.getCmimi());
 
-        entityManager.close();
-        entityManagerFactory.close();
+        session.close();
+        HibernateUtil.shutdown();
         scanner.close();
     }
 }
