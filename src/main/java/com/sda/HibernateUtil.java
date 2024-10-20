@@ -1,10 +1,13 @@
 package com.sda;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import java.util.Properties;
-import java.io.FileInputStream;
+import org.hibernate.service.ServiceRegistry;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class HibernateUtil {
     private static final SessionFactory sessionFactory = buildSessionFactory();
@@ -12,22 +15,28 @@ public class HibernateUtil {
     private static SessionFactory buildSessionFactory() {
         try {
             Configuration configuration = new Configuration();
-            Properties hibernateProperties = new Properties();
 
-            try (FileInputStream fis = new FileInputStream("src/main/resources/hibernate.properties")) {
-                hibernateProperties.load(fis);
+            Properties properties = new Properties();
+            try (InputStream input = HibernateUtil.class.getClassLoader().getResourceAsStream("hibernate.properties")) {
+                if (input == null) {
+                    throw new RuntimeException("Unable to find hibernate.properties");
+                }
+                properties.load(input);
             } catch (IOException e) {
-                throw new ExceptionInInitializerError(e);
+                throw new RuntimeException("Failed to load hibernate.properties", e);
             }
 
-            configuration.setProperties(hibernateProperties);
-            configuration.addAnnotatedClass(Products.class);
-            configuration.addAnnotatedClass(Buyer.class);
+            configuration.setProperties(properties);
             configuration.addAnnotatedClass(Bill.class);
+            configuration.addAnnotatedClass(Buyer.class);
+            configuration.addAnnotatedClass(Product.class);
 
-            return configuration.buildSessionFactory();
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(configuration.getProperties()).build();
+
+            return configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
-            System.err.println("Initial SessionFactory creation failed: " + ex);
+            System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }

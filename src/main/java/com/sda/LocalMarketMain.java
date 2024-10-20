@@ -10,16 +10,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class LocalMarketMain {
+
     public static void main(String[] args) {
+
+        ProductService.initializeProducts();
+
         try (SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
              Session session = sessionFactory.openSession();
              Scanner scanner = new Scanner(System.in)) {
 
-            List<Products> selectedProducts = new ArrayList<>();
+            List<Product> selectedProducts = new ArrayList<>();
             double totalCmimi = 0;
 
             while (true) {
-                List<Products> products = getProductsFromDB(session);
+                List<Product> products = getProductsFromDB(session);
 
                 displayProducts(products);
 
@@ -41,29 +45,29 @@ public class LocalMarketMain {
         HibernateUtil.shutdown();
     }
 
-    private static List<Products> getProductsFromDB(Session session) {
-        Query<Products> query = session.createQuery("FROM Products", Products.class);
+    private static List<Product> getProductsFromDB(Session session) {
+        Query<Product> query = session.createQuery("FROM Product", Product.class);
         return query.getResultList();
     }
 
-    private static void displayProducts(List<Products> products) {
+    private static void displayProducts(List<Product> products) {
         System.out.println("Produktet:");
         for (int i = 0; i < products.size(); i++) {
             System.out.println((i + 1) + ": " + products.get(i));
         }
     }
 
-    private static double handleProductSelection(Session session, Scanner scanner, List<Products> products, List<Products> selectedProducts) {
+    private static double handleProductSelection(Session session, Scanner scanner, List<Product> products, List<Product> selectedProducts) {
         try {
             int choiceIndex = Integer.parseInt(scanner.nextLine()) - 1;
 
             if (choiceIndex >= 0 && choiceIndex < products.size()) {
-                Products selectedProduct = products.get(choiceIndex);
+                Product selectedProduct = products.get(choiceIndex);
                 System.out.println("Vendosni sasine:");
                 int sasia = Integer.parseInt(scanner.nextLine());
 
                 if (sasia > 0 && sasia <= selectedProduct.getSasia()) {
-                    Products boughtProduct = new Products(selectedProduct.getTipi(), sasia, selectedProduct.getCmimi());
+                    Product boughtProduct = new Product(selectedProduct.getTipi(), sasia, selectedProduct.getCmimi());
                     selectedProducts.add(boughtProduct);
 
                     updateProductStock(session, selectedProduct, sasia);
@@ -80,7 +84,7 @@ public class LocalMarketMain {
         return 0;
     }
 
-    private static void updateProductStock(Session session, Products selectedProduct, int sasia) {
+    private static void updateProductStock(Session session, Product selectedProduct, int sasia) {
         session.beginTransaction();
         selectedProduct.setSasia(selectedProduct.getSasia() - sasia);
         session.update(selectedProduct);
@@ -107,13 +111,13 @@ public class LocalMarketMain {
         return bill;
     }
 
-    private static void printBill(Buyer buyer, Bill bill, List<Products> selectedProducts) {
+    private static void printBill(Buyer buyer, Bill bill, List<Product> selectedProducts) {
         System.out.println("\nFatura:");
         System.out.println("Bleresi: " + buyer.getEmri() + " " + buyer.getMbiemri());
         System.out.println("Data: " + bill.getData());
         System.out.println("Produktet e blera:");
 
-        for (Products p : selectedProducts) {
+        for (Product p : selectedProducts) {
             System.out.println(p.getTipi() + " - Sasia: " + p.getSasia() + " - Cmimi: " + p.getTotalCmimi());
         }
 

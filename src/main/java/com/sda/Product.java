@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
-public class Products {
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +19,10 @@ public class Products {
     @Column(nullable = false)
     private double cmimi;
 
-    public Products() {
+    public Product() {
     }
 
-    public Products(String tipi, int sasia, double cmimi) {
+    public Product(String tipi, int sasia, double cmimi) {
         this.tipi = tipi;
         this.sasia = sasia;
         this.cmimi = cmimi;

@@ -7,21 +7,21 @@ import java.util.List;
 
 public class ProductService {
 
-    public void initializeProducts() {
-        List<Products> initialProducts = Arrays.asList(
-                new Products("Qumesht", 50, 1.80),
-                new Products("Buke", 100, 0.50),
-                new Products("Veze", 200, 0.15),
-                new Products("Djath", 30, 5.50),
-                new Products("Sallam", 40, 3.20),
-                new Products("Uje", 150, 0.70),
-                new Products("Coca-Cola", 80, 1.20),
-                new Products("Biskota", 60, 1.50),
-                new Products("Sheqer", 45, 1.30),
-                new Products("Vaj", 35, 2.40)
+    public static void initializeProducts() {
+        List<Product> initialProducts = Arrays.asList(
+                new Product("Qumesht", 50, 1.80),
+                new Product("Buke", 100, 0.50),
+                new Product("Veze", 200, 0.15),
+                new Product("Djath", 30, 5.50),
+                new Product("Sallam", 40, 3.20),
+                new Product("Uje", 150, 0.70),
+                new Product("Coca-Cola", 80, 1.20),
+                new Product("Biskota", 60, 1.50),
+                new Product("Sheqer", 45, 1.30),
+                new Product("Vaj", 35, 2.40)
         );
 
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        /*try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             try {
                 // Check if products already exist
@@ -29,7 +29,7 @@ public class ProductService {
                         .getSingleResult();
 
                 if (productCount == 0) {
-                    for (Products product : initialProducts) {
+                    for (Product product : initialProducts) {
                         session.persist(product);
                     }
                     System.out.println("Successfully initialized products database!");
@@ -45,6 +45,10 @@ public class ProductService {
         } catch (Exception e) {
             System.err.println("Error initializing products: " + e.getMessage());
             e.printStackTrace();
+        }*/
+
+        for (Product product : initialProducts) {
+            saveProduct(product);
         }
     }
 
@@ -69,8 +73,21 @@ public class ProductService {
         }
     }
 
+    public static void saveProduct(Product product) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(product);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+    }
+
     public void resetDatabase() {
         clearAllData();
-        initializeProducts();
     }
 }
