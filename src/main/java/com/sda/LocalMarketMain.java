@@ -24,7 +24,6 @@ public class LocalMarketMain {
 
             while (true) {
                 List<Product> products = getProductsFromDB(session);
-
                 displayProducts(products);
 
                 System.out.println("Zgjidhni numrin e produktit (ose 'exit' per te printuar faturen):");
@@ -63,6 +62,7 @@ public class LocalMarketMain {
 
             if (choiceIndex >= 0 && choiceIndex < products.size()) {
                 Product selectedProduct = products.get(choiceIndex);
+
                 System.out.println("Vendosni sasine:");
                 int sasia = Integer.parseInt(scanner.nextLine());
 

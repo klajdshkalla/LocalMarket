@@ -8,61 +8,35 @@ import java.util.List;
 public class ProductService {
 
     public static void initializeProducts() {
+        clearAllData();
+
         List<Product> initialProducts = Arrays.asList(
-                new Product("Qumesht", 50, 1.80),
-                new Product("Buke", 100, 0.50),
-                new Product("Veze", 200, 0.15),
-                new Product("Djath", 30, 5.50),
-                new Product("Sallam", 40, 3.20),
-                new Product("Uje", 150, 0.70),
-                new Product("Coca-Cola", 80, 1.20),
-                new Product("Biskota", 60, 1.50),
-                new Product("Sheqer", 45, 1.30),
-                new Product("Vaj", 35, 2.40)
+                new Product("Qumesht", 50, 100.99),
+                new Product("Buke", 100, 125.55),
+                new Product("Veze", 200, 55.95),
+                new Product("Djath", 30, 85.99),
+                new Product("Sallam", 40, 355.99),
+                new Product("Uje", 150, 30.99),
+                new Product("Coca-Cola", 80, 155.25),
+                new Product("Biskota", 60, 1700.55),
+                new Product("Sheqer", 45, 160.75),
+                new Product("Vaj", 35, 250.55)
         );
-
-        /*try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction tx = session.beginTransaction();
-            try {
-                // Check if products already exist
-                Long productCount = session.createQuery("select count(*) from Products", Long.class)
-                        .getSingleResult();
-
-                if (productCount == 0) {
-                    for (Product product : initialProducts) {
-                        session.persist(product);
-                    }
-                    System.out.println("Successfully initialized products database!");
-                } else {
-                    System.out.println("Products already exist in database. Skipping initialization.");
-                }
-
-                tx.commit();
-            } catch (Exception e) {
-                tx.rollback();
-                throw e;
-            }
-        } catch (Exception e) {
-            System.err.println("Error initializing products: " + e.getMessage());
-            e.printStackTrace();
-        }*/
 
         for (Product product : initialProducts) {
             saveProduct(product);
         }
     }
 
-    public void clearAllData() {
+    public static void clearAllData() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction tx = session.beginTransaction();
             try {
-                // Delete in correct order to respect foreign key constraints
                 session.createQuery("delete from Bill").executeUpdate();
                 session.createQuery("delete from Buyer").executeUpdate();
-                session.createQuery("delete from Products").executeUpdate();
-
+                session.createQuery("delete from Product").executeUpdate();
                 tx.commit();
-                System.out.println("Successfully cleared all data from database!");
+                System.out.println("Successfully cleared all data from the database!");
             } catch (Exception e) {
                 tx.rollback();
                 throw e;
